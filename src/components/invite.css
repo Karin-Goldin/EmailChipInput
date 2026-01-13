@@ -49,10 +49,9 @@
   height: 48px;
   white-space: nowrap;
 
-  box-shadow:
-    /* Drop shadow */ 0 1px 2px rgba(16, 24, 40, 0.05),
-    /* Inner shadow top */ inset 0 -2px 4px rgba(6, 56, 186, 1),
-    /* Inner shadow bottom */ inset 0 2px 3.4px rgba(251, 251, 251, 0.3);
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05),
+    inset 0 -2px 4px rgba(6, 56, 186, 1),
+    inset 0 2px 3.4px rgba(251, 251, 251, 0.3);
 }
 
 .primaryBtn:disabled {
@@ -73,7 +72,7 @@
   border: 1px solid #d0d5dd;
   border-radius: 8px;
   padding: 0 12px;
-  height: 48px; /* קבוע */
+  height: 48px;
   display: flex;
   align-items: center;
   cursor: text;

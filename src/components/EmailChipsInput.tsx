@@ -153,10 +153,8 @@ export function EmailChipsInput({
     const btnRect = btn.getBoundingClientRect();
     const wrapRect = wrap.getBoundingClientRect();
 
-    // left בתוך ה-wrapper
     const leftRaw = btnRect.left - wrapRect.left;
 
-    // clamp כדי לא לצאת מהשדה
     const maxLeft = Math.max(0, wrap.clientWidth - POPOVER_WIDTH);
     const left = Math.max(0, Math.min(leftRaw, maxLeft));
 
@@ -258,7 +256,7 @@ export function EmailChipsInput({
         <div
           ref={popoverRef}
           className="overflowPopover"
-          style={{ left: popoverLeft }} // מעוגן ל-+N
+          style={{ left: popoverLeft }}
           onClick={(e) => e.stopPropagation()}
         >
           <div className="overflowChipsGrid">
