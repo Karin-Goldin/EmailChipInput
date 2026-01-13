@@ -1,73 +1,78 @@
-# React + TypeScript + Vite
+# Invite Users by Email (React Component)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project implements the **email invite input area** based on Figma design.
+It supports adding multiple email addresses as “chips”, removing them, handling overflow with a `+N` chip and a popover, and submitting the list ( only console log).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The implementation also demonstrates **bi-directional communication between parent and child components**:
 
-## React Compiler
+- Child: the input component emits the current emails list
+- Parent: the parent can reset/clear the child state after submit or on demand
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Add emails by typing and pressing **Enter**, `,` or `;`
+- Paste multiple emails (comma/space/newline separated)
+- Validation:
+  - invalid email format is rejected with an inline error
+  - duplicates are rejected (case-insensitive)
+- Remove email chips with `×`
+- Overflow:
+  - show up to `visibleLimit` chips
+  - remaining chips are represented by a `+N` chip
+  - clicking `+N` opens a popover displaying hidden chips (removable)
+- Submit button:
+  - disabled when there are no emails
+  - on submit: logs the email list and resets the input
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Components
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### `InviteByEmail` (Parent)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Owns the “submit” action and the final emails list
+- Receives updates from child via `onEmailsChange`
+- Resets the child by changing a `key` (`resetKey`) after submit / clear
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### `EmailChipsInput` (Child)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Manages the email input UX:
+  - parsing tokens
+  - validation & dedupe
+  - chips rendering
+  - overflow behavior and popover
+- Notifies parent on any list change (`onEmailsChange(emails)`)
+
+---
+
+## Bidirectional Communication (Parent ↔ Child)
+
+**Child**
+
+- `EmailChipsInput` calls `onEmailsChange(emails)` on every change.
+
+**Parent**
+
+- `InviteByEmail` forces a full reset by updating `resetKey`:
+  - `<EmailChipsInput key={resetKey} ... />`
+  - after submit or when user clicks Clear
+
+This keeps the input component reusable, while the parent controls the final workflow.
+
+---
+
+## Design notes
+
+- Email validation uses a simple regex suitable for UI-level validation (not RFC-perfect).
+- Overflow popover is anchored relative to the +N chip and closes on outside click / ESC.
+
+## Running Locally
+
+```bash
+npm install
+npm run dev
 ```
