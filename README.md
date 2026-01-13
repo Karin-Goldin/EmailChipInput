@@ -3,7 +3,7 @@
 ## Overview
 
 This project implements the **email invite input area** based on Figma design.
-It supports adding multiple email addresses as “chips”, removing them, handling overflow with a `+N` chip and a popover, and submitting the list ( only console log).
+It supports adding multiple email addresses as “chips”, removing them, handling overflow with a `+N` chip and a popover, and submitting the list (only console log).
 
 The implementation also demonstrates **bi-directional communication between parent and child components**:
 
@@ -11,6 +11,13 @@ The implementation also demonstrates **bi-directional communication between pare
 - Parent: the parent can reset/clear the child state after submit or on demand
 
 ---
+
+## Tech Stack
+
+- React 19
+- TypeScript
+- CSS (custom styles, no UI framework)
+- Vite
 
 ## Features
 
@@ -67,8 +74,15 @@ This keeps the input component reusable, while the parent controls the final wor
 
 ## Design notes
 
-- Email validation uses a simple regex suitable for UI-level validation (not RFC-perfect).
-- Overflow popover is anchored relative to the +N chip and closes on outside click / ESC.
+- Email validation is handled at UI level using a simple regex, which is sufficient for client-side validation but not RFC-complete.
+- Duplicate emails are prevented using case-insensitive comparison.
+- overflow behavior shows a limited number of chips (visibleLimit) and represents the rest with a +N chip to maintain a clean UI.
+- The +N chip opens a popover to allow visibility and removal of hidden emails, improving usability without cluttering the input.
+
+## Challenges & How They Were Overcome
+
+- Preventing layout jumps when many emails are added required careful use of flexbox, fixed heights, and overflow handling.
+- Bi-directional communication between parent and child - Allowing the parent to reset the child state using a controlled key (resetKey) pattern.
 
 ## Running Locally
 
